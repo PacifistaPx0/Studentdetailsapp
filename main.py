@@ -22,7 +22,8 @@ e2 = tk.Entry(master)
 e3 = tk.Entry(master)
 
 
-
+#function to append or write user details to json file
+#if json file is empty it creates an empty dictionary
 def savejson():
     with open('users.json', 'r+') as f:        
         try:
@@ -40,7 +41,7 @@ def savejson():
     with open("users.json", "w") as f:
         json.dump(data, f, indent=4)
      
-
+#function to display average of the entire score
 def displayAvg():
     avg = 0
     with open('users.json', 'r+') as f:
