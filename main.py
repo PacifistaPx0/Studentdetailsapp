@@ -36,14 +36,7 @@ def savejson():
             data = {}
             data['students']=[]
     
-    try:
-        data['students'].append({
-            'name':e1.get(),
-            'matric':int(e2.get()),
-            'score':int(e3.get())
-        })
-    except ValueError:
-        return tk.Label(master, text="   invalid input    ").grid(row=1, column=4)
+    
     
     #error handling
     if len(e2.get()) != 9:
@@ -54,7 +47,17 @@ def savejson():
     for i in data['students']:
         if int(e2.get()) == i['matric']:
             return tk.Label(master, text="   user exists   ").grid(row=1, column=4)
+
+    try:
+        data['students'].append({
+            'name':e1.get(),
+            'matric':int(e2.get()),
+            'score':int(e3.get())
+        })
+    except ValueError:
+        return tk.Label(master, text="   invalid input    ").grid(row=1, column=4)
     #write user into file
+    
     with open("users.json", "w") as f:
         json.dump(data, f, indent=4)
     
