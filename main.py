@@ -3,9 +3,6 @@
 from tkinter import *
 import tkinter as tk
 import json
-
- 
- 
  
 # creating a new tkinter window
 master = tk.Tk()
@@ -14,7 +11,7 @@ master = tk.Tk()
 master.title("MARKSHEET")
  
 # specifying geometry for window size
-master.geometry("700x250")
+master.geometry("1200x250")
 
 
 #function to append or write user details to json file
@@ -27,6 +24,20 @@ def savejson():
         except json.JSONDecodeError:
             data = {}
             data['students']=[]
+    
+    #error handling
+    if not e1.get().isalpha():
+        return tk.Label(master, text="  invalid name  ").grid(row=9, column=1)
+    if not e2.get().isalpha():
+        return tk.Label(master, text="  invalid surname  ").grid(row=9, column=1)
+    if not e3.get().isdigit():
+        return tk.Label(master, text="   invalid score    ").grid(row=9, column=1)
+    if int(e3.get()) < 0 or int(e3.get()) > 100:
+        return tk.Label(master, text="   invalid score    ").grid(row=9, column=1)
+    if not e4.get().isdigit():
+        return tk.Label(master, text="  invalid matric  ").grid(row=9, column=1)
+    if len(e4.get()) != 9:
+        return tk.Label(master, text="  invalid matric  ").grid(row=9, column=1)
     
 
     for i in data['students']:
@@ -43,22 +54,39 @@ def savejson():
     except ValueError:
         return tk.Label(master, text="   invalid input    ").grid(row=9, column=1)
     
-    #error handling
-    if not e1.get().isalpha():
-        return tk.Label(master, text="  invalid name  ").grid(row=9, column=1)
-    if not e2.get().isalpha():
-        return tk.Label(master, text="  invalid surname  ").grid(row=9, column=1)
-    if len(e4.get()) != 9:
-        return tk.Label(master, text="  invalid matric  ").grid(row=9, column=1)
-    if int(e3.get()) < 0 or int(e3.get()) > 100:
-        return tk.Label(master, text="   invalid score    ").grid(row=9, column=1)
-    
     #write user into file
     with open("users.json", "w") as f:
         json.dump(data, f, indent=4)
     
     tk.Label(master, text="  succesful input  ").grid(row=9, column=1)
+
+#function to delete user using matric no
+def deleteUser():
+    with open('users.json', 'r+') as f:        
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            data = {}
+            data['students']=[]
+    try:
+        matric = int(e4.get())  
+    except ValueError:
+        return tk.Label(master, text="   invalid input    ").grid(row=9, column=1)
+
+    if len(data)==0:
+        return tk.Label(master, text="   no user found    ").grid(row=9, column=1)
+    i=0
+    for dict in data['students']:
+        if matric == dict['matric']:
+            del data['students'][i]
+            #rewrite the new data into json file
+            with open("users.json", "w") as f:
+                json.dump(data, f, indent=4)
+            return tk.Label(master, text="  user deleted  ").grid(row=9, column=1)
+        i+=1
     
+    tk.Label(master, text="  no user found  ").grid(row=9, column=1)
+
      
 #function to display average of the entire score
 def displayAvg():
@@ -67,15 +95,14 @@ def displayAvg():
         try:
             data = json.load(f)
             for i in data['students']:
-                avg += i['score']
-                    
+                avg += i['score']       
         except json.JSONDecodeError:
             return tk.Label(master, text="no data").grid(row=20, column=5)
     
     #widget for average score
     tk.Label(master, text=str(round(avg/len(data['students']),2))).grid(row=20, column=5)
 
-#function to display max score 
+#function to display maximum scoring students 
 def displayMax():
     allvalues = []
     max_students=[]
@@ -86,15 +113,58 @@ def displayMax():
                 allvalues += [i['score']]
             for i in data['students']:
                 if i['score'] == max(allvalues):
-                    max_students+=list(i.values())
-                    
-            
+                    max_students+=list(i.values())        
         except json.JSONDecodeError:
             return tk.Label(master, text="no data").grid(row=22, column=5)
 
+    tk.Label(master, text=max_students, wraplength=700).grid(row=22, column=5)
 
-    tk.Label(master, text=max_students).grid(row=22, column=5)
- 
+#function to display the minimum scoring students
+def displayMin():
+    allvalues = []
+    min_students=[]
+    with open('users.json', 'r+') as f:
+        try:
+            data = json.load(f)
+            for i in data['students']:
+                allvalues += [i['score']]
+            for i in data['students']:
+                if i['score'] == min(allvalues):
+                    min_students+=list(i.values())
+        except json.JSONDecodeError:
+            return tk.Label(master, text="no data").grid(row=24, column=5)
+
+
+    tk.Label(master, text=min_students, wraplength=700).grid(row=24, column=5)
+                
+#function to display students that scored below 40
+def displayFailed():
+    allvalues = []
+    with open('users.json', 'r+') as f:
+        try:
+            data = json.load(f)
+            for i in data['students']:
+                if i['score'] < 40:
+                    allvalues+=list(i.values())
+        except json.JSONDecodeError:
+            return tk.Label(master, text="no data").grid(row=26, column=5)
+
+    tk.Label(master, text=allvalues, wraplength=700).grid(row=26, column=5)
+
+#function to display students who scored above 69
+def displayTop():
+    allvalues = []
+    with open('users.json', 'r+') as f:
+        try:
+            data = json.load(f)
+            for i in data['students']:
+                if i['score'] > 69:
+                    allvalues+=list(i.values())
+        except json.JSONDecodeError:
+            return tk.Label(master, text="no data").grid(row=28, column=5)
+
+    tk.Label(master, text=allvalues, wraplength=700).grid(row=28, column=5)
+
     
 # label to enter name
 tk.Label(master, text="Name").grid(row=0, column=0)
@@ -108,7 +178,6 @@ tk.Label(master, text="Matric Number").grid(row=1, column=3)
 # label for score
 tk.Label(master, text="Score").grid(row=1, column=0)
  
-
 # taking entries of name, matric number and score respectively
 e1=tk.Entry(master)
 e2=tk.Entry(master)
@@ -124,16 +193,32 @@ e4.grid(row=1, column=4)
 # button to save new students in json file
 button1=tk.Button(master, text="Save", bg="green", command=savejson)
 button1.grid(row=8, column=1)
+
+#button to delete user
+button1=tk.Button(master, text="Delete", bg="green", command=deleteUser)
+button1.grid(row=8, column=3)
   
 # button to display the average score
-button2=tk.Button(master, text="average", bg="green", command=displayAvg)
+button2=tk.Button(master, text="Mean Score", bg="green", command=displayAvg)
 button2.grid(row=20, column=4)
 
-# button to display the max score
-button3=tk.Button(master, text="max score", bg="green", command=displayMax)
+# button to display best scoring students
+button3=tk.Button(master, text="Best Student(s)", bg="green", command=displayMax)
 button3.grid(row=22, column=4)
+
+# button to display least scoring students
+button3=tk.Button(master, text="Least Scoring Student(s)", bg="green", command=displayMin)
+button3.grid(row=24, column=4)
+
+# button to display failed students
+button3=tk.Button(master, text="Student(s) < 40", bg="green", command=displayFailed)
+button3.grid(row=26, column=4)
+
+# button to display students 70 and above
+button3=tk.Button(master, text="Student(s) >= 70", bg="green", command=displayTop)
+button3.grid(row=28, column=4)
   
-     
-master.mainloop()
+if __name__ == "__main__":    
+    master.mainloop()
   
   
