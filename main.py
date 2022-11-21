@@ -191,31 +191,31 @@ e3.grid(row=1, column=1)
 e4.grid(row=1, column=4)
   
 # button to save new students in json file
-button1=tk.Button(master, text="Save", bg="green", command=savejson)
+button1=tk.Button(master, bd=1, text="Save", bg="green", command=savejson)
 button1.grid(row=8, column=1)
 
 #button to delete user
-button1=tk.Button(master, text="Delete", bg="green", command=deleteUser)
+button1=tk.Button(master, bd=1, text="Delete", bg="green", command=deleteUser)
 button1.grid(row=8, column=3)
   
 # button to display the average score
-button2=tk.Button(master, text="Mean Score", bg="green", command=displayAvg)
+button2=tk.Button(master, bd=1, text="Mean Score", bg="green", command=displayAvg)
 button2.grid(row=20, column=4)
 
 # button to display best scoring students
-button3=tk.Button(master, text="Best Student(s)", bg="green", command=displayMax)
+button3=tk.Button(master, bd=1, text="Best Student(s)", bg="green", command=displayMax)
 button3.grid(row=22, column=4)
 
 # button to display least scoring students
-button3=tk.Button(master, text="Least Scoring Student(s)", bg="green", command=displayMin)
+button3=tk.Button(master, bd=1, text="Least Scoring Student(s)", bg="green", command=displayMin)
 button3.grid(row=24, column=4)
 
 # button to display failed students
-button3=tk.Button(master, text="Student(s) < 40", bg="green", command=displayFailed)
+button3=tk.Button(master, bd=1, text="Student(s) below 40", bg="green", command=displayFailed)
 button3.grid(row=26, column=4)
 
 # button to display students 70 and above
-button3=tk.Button(master, text="Student(s) >= 70", bg="green", command=displayTop)
+button3=tk.Button(master, bd=1, text="Student(s) above 69", bg="green", command=displayTop)
 button3.grid(row=28, column=4)
   
 if __name__ == "__main__":    
