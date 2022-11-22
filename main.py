@@ -87,83 +87,106 @@ def deleteUser():
     
     tk.Label(master, text="  no user found  ").grid(row=9, column=1)
 
-     
-#function to display average of the entire score
+#function to display average of the entire scores
+label1 = tk.Label(master, text="")
+label1.grid(row=20, column=5)
 def displayAvg():
     avg = 0
     with open('users.json', 'r+') as f:
         try:
             data = json.load(f)
+            if len(data['students']) == 0:
+                return label1.configure(text="no data")
             for i in data['students']:
-                avg += i['score']       
+                avg += i['score']  
+            
         except json.JSONDecodeError:
-            return tk.Label(master, text="no data").grid(row=20, column=5)
+            return label1.configure(text="no data")
     
     #widget for average score
-    tk.Label(master, text=str(round(avg/len(data['students']),2))).grid(row=20, column=5)
+    return label1.config(text="Average: " + str(round(avg/len(data['students']),2)))
 
 #function to display maximum scoring students 
+label2 = tk.Label(master, text="")
+label2.grid(row=22, column=5)
 def displayMax():
     allvalues = []
     max_students=[]
     with open('users.json', 'r+') as f:
         try:
             data = json.load(f)
+            if len(data['students']) == 0:
+                return label2.config(text="no data")
             for i in data['students']:
                 allvalues += [i['score']]
             for i in data['students']:
                 if i['score'] == max(allvalues):
                     max_students+=list(i.values())        
         except json.JSONDecodeError:
-            return tk.Label(master, text="no data").grid(row=22, column=5)
+            return label2.config(text="no data")
 
-    tk.Label(master, text=max_students, wraplength=700).grid(row=22, column=5)
+    return label2.config(text=max_students, wraplength=700)
 
 #function to display the minimum scoring students
+label3 = tk.Label(master, text="")
+label3.grid(row=24, column=5)
 def displayMin():
     allvalues = []
     min_students=[]
     with open('users.json', 'r+') as f:
         try:
             data = json.load(f)
+            if len(data['students']) == 0:
+                return label3.config(text="no data")
             for i in data['students']:
                 allvalues += [i['score']]
             for i in data['students']:
                 if i['score'] == min(allvalues):
                     min_students+=list(i.values())
         except json.JSONDecodeError:
-            return tk.Label(master, text="no data").grid(row=24, column=5)
+            return label3.config(text="no data")
 
-
-    tk.Label(master, text=min_students, wraplength=700).grid(row=24, column=5)
+    return label3.config(text=min_students, wraplength=700)
                 
 #function to display students that scored below 40
+label4 = tk.Label(master, text="")
+label4.grid(row=26, column=5)
 def displayFailed():
     allvalues = []
     with open('users.json', 'r+') as f:
         try:
             data = json.load(f)
+            if len(data['students']) == 0:
+                return label4.config(text="no data")
             for i in data['students']:
                 if i['score'] < 40:
                     allvalues+=list(i.values())
+            if len(allvalues)==0:
+                return label4.config(text="no data")
         except json.JSONDecodeError:
-            return tk.Label(master, text="no data").grid(row=26, column=5)
+            return label4.config(text="no data")
 
-    tk.Label(master, text=allvalues, wraplength=700).grid(row=26, column=5)
+    return label4.config(text=allvalues, wraplength=700)
 
 #function to display students who scored above 69
+label5 = tk.Label(master, text="")
+label5.grid(row=28, column=5)
 def displayTop():
     allvalues = []
     with open('users.json', 'r+') as f:
         try:
             data = json.load(f)
+            if len(data['students']) == 0:
+                return label5.config(text="no data")
             for i in data['students']:
                 if i['score'] > 69:
                     allvalues+=list(i.values())
+            if len(allvalues) == 0:
+                return label5.config(text="no data")
         except json.JSONDecodeError:
-            return tk.Label(master, text="no data").grid(row=28, column=5)
+            return label5.config(text="no data")
 
-    tk.Label(master, text=allvalues, wraplength=700).grid(row=28, column=5)
+    return label5.config(text=allvalues, wraplength=700)
 
     
 # label to enter name
