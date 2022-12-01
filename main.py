@@ -16,6 +16,9 @@ master.geometry("1200x250")
 
 #function to append or write user details to json file
 #if json file is empty it creates an empty dictionary
+
+label0 = tk.Label(master, text="")#label to display error or successful messages to user
+label0.grid(row=9, column=1)
 def savejson():
     
     with open('users.json', 'r+') as f:        
@@ -27,22 +30,22 @@ def savejson():
     
     #error handling
     if not e1.get().isalpha():
-        return tk.Label(master, text="  invalid name  ").grid(row=9, column=1)
+        return label0.configure(text="invalid name input(alphabet required)")
     if not e2.get().isalpha():
-        return tk.Label(master, text="  invalid surname  ").grid(row=9, column=1)
+        return label0.configure(text="invalid surname input(alphabet required)")
     if not e3.get().isdigit():
-        return tk.Label(master, text="   invalid score    ").grid(row=9, column=1)
+        return label0.configure(text="invalid user score")
     if int(e3.get()) < 0 or int(e3.get()) > 100:
-        return tk.Label(master, text="   invalid score    ").grid(row=9, column=1)
+        return label0.configure(text="invalid user score(must be within 0 to 100")
     if not e4.get().isdigit():
-        return tk.Label(master, text="  invalid matric  ").grid(row=9, column=1)
+        return label0.configure(text="invalid matric(digits required)")
     if len(e4.get()) != 9:
-        return tk.Label(master, text="  invalid matric  ").grid(row=9, column=1)
+        return label0.configure(text="invalid matric(9 digits required)")
     
 
     for i in data['students']:
         if int(e4.get()) == i['matric']:
-            return tk.Label(master, text="    user exists    ").grid(row=9, column=1)
+            return label0.configure(text="user with matric already in database")
 
     try:
         data['students'].append({
@@ -52,13 +55,13 @@ def savejson():
             'matric':int(e4.get())  
         })
     except ValueError:
-        return tk.Label(master, text="   invalid input    ").grid(row=9, column=1)
+        return label0.configure(text="invalid input")
     
     #write user into file
     with open("users.json", "w") as f:
         json.dump(data, f, indent=4)
     
-    tk.Label(master, text="  succesful input  ").grid(row=9, column=1)
+    return label0.configure(text="user saved successfully")
 
 #function to delete user using matric no
 def deleteUser():
@@ -71,10 +74,10 @@ def deleteUser():
     try:
         matric = int(e4.get())  
     except ValueError:
-        return tk.Label(master, text="   invalid input    ").grid(row=9, column=1)
+        return label0.configure(text="invalid matric input")
 
     if len(data)==0:
-        return tk.Label(master, text="   no user found    ").grid(row=9, column=1)
+        return label0.configure(text="user with matric not found")
     i=0
     for dict in data['students']:
         if matric == dict['matric']:
@@ -82,10 +85,10 @@ def deleteUser():
             #rewrite the new data into json file
             with open("users.json", "w") as f:
                 json.dump(data, f, indent=4)
-            return tk.Label(master, text="  user deleted  ").grid(row=9, column=1)
+            return label0.configure(text="User deleted successfully")
         i+=1
     
-    tk.Label(master, text="  no user found  ").grid(row=9, column=1)
+    return label0.configure(text="no user found")
 
 #function to display average of the entire scores
 label1 = tk.Label(master, text="")
