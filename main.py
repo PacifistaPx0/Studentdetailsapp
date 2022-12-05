@@ -172,7 +172,8 @@ def displayMaxS():
                 allvalues += [i['score']]
             for i in data['students']:
                 if i['score'] == max(allvalues):
-                    max_students+=list(i.values())        
+                    max_students+=list(i.values())
+                    max_students.append(",")        
         except json.JSONDecodeError:
             return labelx.configure(text="no data")
 
@@ -191,6 +192,7 @@ def displayFailed():
             for i in data['students']:
                 if i['score'] < 40:
                     allvalues+=list(i.values())
+                    allvalues.append(",")
             if len(allvalues)==0:
                 return label4.configure(text="no data")
         except json.JSONDecodeError:
@@ -211,6 +213,7 @@ def displayTop():
             for i in data['students']:
                 if i['score'] > 69:
                     allvalues+=list(i.values())
+                    allvalues.append(",")
             if len(allvalues) == 0:
                 return label5.configure(text="no data")
         except json.JSONDecodeError:
@@ -220,7 +223,7 @@ def displayTop():
 
     
 # label to enter name
-customtkinter.CTkLabel(master, text="Name:").grid(row=0, column=0)
+customtkinter.CTkLabel(master, text="First Name:").grid(row=0, column=0)
  
 # label to enter surname
 customtkinter.CTkLabel(master, text="Surname:").grid(row=0, column=1)
